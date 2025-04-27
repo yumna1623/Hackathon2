@@ -1,0 +1,123 @@
+
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #222535;
+    color: aliceblue;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.login, .signUp {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #4b0082;
+    width: 90%;
+    max-width: 350px;
+    padding: 30px;
+    border-radius: 15px;
+    background-color: #7952b3;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin: 20px auto;
+}
+
+.login h1, .signUp h1 {
+    color: #fff;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.form-group {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: #eaeaea;
+    color: #333;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.input-field:focus {
+    outline: none;
+    border: 2px solid #4b0082;
+}
+
+.btn {
+    width: 100%;
+    padding: 12px;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    background-color: #0e6b5c;
+    font-size: 1.1rem;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+.btn:hover{
+    background-color: #3eb12e;
+}
+
+.form-footer {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.form-footer a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.form-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .login, .signUp {
+        padding: 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .login, .signUp {
+        width: 95%;
+        padding: 20px;
+    }
+    
+    .login h1, .signUp h1 {
+        font-size: 1.5rem;
+        background-color: black;
+    }
+    
+    .input-field {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+    
+    .form-btn {
+        padding: 10px;
+        font-size: 1rem;
+    }
+}
