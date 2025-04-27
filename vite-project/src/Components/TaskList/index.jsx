@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { ref, update, remove } from 'firebase/database'; // Added `remove`
+import { ref, update, remove } from 'firebase/database'; 
 import { db } from '../../config';
 import './TaskList.css';
 import TaskForm from '../TaskForm';
 
 const TaskList = ({ tasks }) => {
   const [editingTask, setEditingTask] = useState(null);
+  if (!tasks) {
+    return <div className="loading">.........................................................</div>;
+  }
 
-  // Update task status (To Do ↔ In Progress ↔ Done)
   const updateStatus = async (taskId, newStatus) => {
     await update(ref(db, `tasks/${taskId}`), {
       status: newStatus,
@@ -37,15 +39,14 @@ const TaskList = ({ tasks }) => {
                 <h3>{task.title}</h3>
                 <span className="status-badge">{task.status}</span>
               </div>
-              
+
               <p className="task-desc">{task.description}</p>
               <p className="task-assignee">@{task.assignedTo}</p>
-              
+
               <div className="task-footer">
-                {/* Status Movement Buttons */}
                 <div className="status-actions">
                   {task.status === 'To Do' && (
-                    <button
+                <button
                       onClick={() => updateStatus(taskId, 'In Progress')}
                       className="progress-btn"
                     >
@@ -79,7 +80,7 @@ const TaskList = ({ tasks }) => {
                     </button>
                   )}
                 </div>
-                
+
                 {/* Edit/Delete Buttons */}
                 <div className="task-controls">
                   <button
