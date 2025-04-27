@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, database } from "../../Config.js";
+import { auth, db } from "../../config";
 import { ref, set } from "firebase/database";
 import { Link, useNavigate } from "react-router-dom";
 import "../index.css";
@@ -22,7 +22,7 @@ const SignUp = () => {
       .then((userCredential) => {
         const user = userCredential.user;
 
-        set(ref(database, `users/${user.uid}`), {
+        set(ref(db, `users/${user.uid}`), {
           email: user.email,
           createdAt: new Date().toISOString()
         })

@@ -5,7 +5,7 @@ import Login from "./Pages/Login";
 import SignUp from "./Pages/SignUp";
 import { onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { auth } from "./Config";
+import { auth } from "./config";
 
 function App() {
   const [user, setUser] = useState("no-user");
