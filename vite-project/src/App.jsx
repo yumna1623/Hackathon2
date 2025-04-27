@@ -1,6 +1,6 @@
 import { Navigate, Routes } from "react-router-dom";
 import { Route } from "react-router-dom";
-import Home from "./pages/Home";
+import Dashboard from "./pages/Dashboard";
 import Login from "./Pages/Login";
 import SignUp from "./Pages/SignUp";
 import { onAuthStateChanged } from "firebase/auth";
@@ -21,7 +21,7 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={user ? <Home /> : <Navigate to={"./Login"} />} />
+      <Route path="/" element={user ? <Dashboard /> : <Navigate to={"./Login"} />} />
       <Route
         path="/Login"
         element={!user ? <Login /> : <Navigate to={"/"} />}
