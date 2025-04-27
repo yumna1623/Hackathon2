@@ -7,7 +7,7 @@ import TaskForm from '../TaskForm';
 const TaskList = ({ tasks }) => {
   const [editingTask, setEditingTask] = useState(null);
   if (!tasks) {
-    return <div className="loading">.........................................................</div>;
+    return <div className="loading">...........................................................</div>;
   }
 
   const updateStatus = async (taskId, newStatus) => {
@@ -46,7 +46,7 @@ const TaskList = ({ tasks }) => {
               <div className="task-footer">
                 <div className="status-actions">
                   {task.status === 'To Do' && (
-                <button
+                    <button
                       onClick={() => updateStatus(taskId, 'In Progress')}
                       className="progress-btn"
                     >
