@@ -7,22 +7,22 @@ import TaskForm from '../TaskForm';
 const TaskList = ({ tasks }) => {
   const [editingTask, setEditingTask] = useState(null);
   if (!tasks) {
-    return <div className="loading">...........................................................</div>;
+    return <div className="loading"></div>;
   }
 
-  const updateStatus = async (taskId, newStatus) => {
-    await update(ref(db, `tasks/${taskId}`), {
-      status: newStatus,
-      updatedAt: Date.now(),
-    });
-  };
+//   const updateStatus = async (taskId, newStatus) => {
+//     await update(ref(db, `tasks/${taskId}`), {
+//       status: newStatus,
+//       updatedAt: Date.now(),
+//     });
+//   };
 
   // Delete a task
-  const handleDelete = async (taskId) => {
-    if (window.confirm('Are you sure you want to delete this task?')) {
-      await remove(ref(db, `tasks/${taskId}`));
-    }
-  };
+//   const handleDelete = async (taskId) => {
+//     if (window.confirm('Are you sure you want to delete this task?')) {
+//       await remove(ref(db, `tasks/${taskId}`));
+//     }
+//   };
 
   return (
     <div className="task-container">

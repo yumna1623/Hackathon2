@@ -10,16 +10,16 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
-  }
-  
-  .task-form h2 {
+}
+
+.task-form h2 {
     text-align: center;
     margin-bottom: 1rem;
     color: #333;
-  }
-  
-  .task-form input,
-  .task-form textarea {
+}
+
+.task-form input,
+.task-form textarea {
     width: 100%;
     padding: 0.8rem;
     border: 1px solid #ddd;
@@ -27,22 +27,21 @@
     font-size: 1rem;
     background-color: #fafafa;
     transition: border-color 0.3s;
-  }
-  
-  .task-form input:focus,
-  .task-form textarea:focus {
+}
+
+.task-form input:focus,
+.task-form textarea:focus {
     outline: none;
     border-color: #7b5cff;
     background-color: #fff;
-  }
-  
-  .task-form textarea {
+}
+
+.task-form textarea {
     resize: vertical;
     min-height: 100px;
-  }
-  
-  .task-form button {
-    background-color: #7b5cff;
+}
+
+.task-form button {
     color: white;
     padding: 0.8rem;
     border: none;
@@ -51,12 +50,15 @@
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.3s;
-  }
-  
-  .task-form button:hover {
-    background-color: #5a42d1;
-  }
-  .success-message {
+    background-color: #367dda;
+
+}
+
+.task-form button:hover {
+    background-color: #1b1247;
+}
+
+.success-message {
     margin-top: 15px;
     padding: 10px;
     background-color: #d4edda;
@@ -64,4 +66,51 @@
     border: 1px solid #c3e6cb;
     border-radius: 4px;
     text-align: center;
-  }
+}
+
+.save-btn, .cancel-btn {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* --------------- Responsive Design ----------------- */
+@media (max-width: 600px) {
+    .task-form {
+        padding: 1.5rem;
+        margin: 1rem;
+        max-width: 90%;
+    }
+
+    .task-form input,
+    .task-form textarea {
+        font-size: 0.95rem;
+        padding: 0.7rem;
+    }
+
+    .task-form button,
+    .save-btn,
+    .cancel-btn {
+        font-size: 0.95rem;
+        padding: 0.7rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .task-form {
+        padding: 1rem;
+    }
+
+    .task-form h2 {
+        font-size: 1.5rem;
+    }
+
+    .task-form input,
+    .task-form textarea {
+        font-size: 0.9rem;
+    }
+}

@@ -1,83 +1,78 @@
-
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { ref, onValue, update, remove } from "firebase/database";
+import { db } from "../../config";
 import "./TaskBoard.css";
-import TaskForm from "../TaskForm";
 
 const TaskBoard = () => {
   const [tasks, setTasks] = useState({
-    inProgress: [{ id: 1, content: "Implement login page", due: "Tomorrow" }],
-    todo: [{ id: 2, content: "Design database schema", due: "Friday" }],
-    done: [{ id: 3, content: "Project setup", due: "Completed" }],
+    todo: [],
+    inProgress: [],
+    done: [],
   });
-  const [showTaskForm, setShowTaskForm] = useState(false);
 
-  const addTask = (newTask) => {
-    setTasks((prevTasks) => ({
-      ...prevTasks,
-      inProgress: [
-        ...prevTasks.inProgress,
-        {
-          id: Date.now(),
-          content: newTask.title,
-          due: "No due date",
-          description: newTask.description,
-          assignedTo: newTask.assignedTo,
-        },
-      ],
-    }));
-    setShowTaskForm(false);
-  };
+  // Load tasks from Firebase and categorize them
+  useEffect(() => {
+    const tasksRef = ref(db, "tasks");
 
-  const moveTask = (taskId, fromColumn, toColumn) => {
-    const taskToMove = tasks[fromColumn].find((task) => task.id === taskId);
-    if (!taskToMove) return;
+    const unsubscribe = onValue(tasksRef, (snapshot) => {
+      const data = snapshot.val();
+      const allTasks = data
+        ? Object.entries(data).map(([id, task]) => ({ id, ...task }))
+        : [];
 
-    const updatedFromColumn = tasks[fromColumn].filter(
-      (task) => task.id !== taskId
+      const grouped = {
+        todo: [],
+        inProgress: [],
+        done: [],
+      };
+
+      allTasks.forEach((task) => {
+        if (task.status === "To Do") grouped.todo.push(task);
+        else if (task.status === "In Progress") grouped.inProgress.push(task);
+        else if (task.status === "Done") grouped.done.push(task);
+      });
+
+      setTasks(grouped);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // Move task to another column (updates status in Firebase)
+  const moveTask = (taskId, toColumn) => {
+    const taskRef = ref(db, `tasks/${taskId}`);
+    const statusMap = {
+      todo: "To Do",
+      inProgress: "In Progress",
+      done: "Done",
+    };
+
+    update(taskRef, { status: statusMap[toColumn] }).catch((error) =>
+      console.error("Failed to move task:", error)
     );
-    const updatedToColumn = [...tasks[toColumn], taskToMove];
-
-    setTasks({
-      ...tasks,
-      [fromColumn]: updatedFromColumn,
-      [toColumn]: updatedToColumn,
-    });
   };
 
-  const deleteTask = (taskId, column) => {
-    setTasks({
-      ...tasks,
-      [column]: tasks[column].filter((task) => task.id !== taskId),
-    });
+  // Delete task from Firebase
+  const deleteTask = (taskId) => {
+    const taskRef = ref(db, `tasks/${taskId}`);
+    remove(taskRef).catch((error) =>
+      console.error("Failed to delete task:", error)
+    );
   };
 
   return (
     <div className="task-board">
-      <h1>Task Board</h1>
-      
-      {/* Add this button to show the form */}
-      <button 
-        className="add-task-btn" 
-        onClick={() => setShowTaskForm(true)}
-      >
-        + Add Task
-      </button>
-
-      {showTaskForm && (
-        <TaskForm onCancel={() => setShowTaskForm(false)} onSubmit={addTask} />
-      )}
-
       <div className="columns-container">
-        {/* In Progress Column */}
-        <div className="column in-progress">
-          <h2>In Progress</h2>
+        {/* Todo Column */}
+        <div className="column todo">
+          <h2>To Do</h2>
           <div className="tasks">
-            {tasks.inProgress.length === 0 ? (
+            {tasks.todo.length === 0 ? (
               <p>No tasks to display</p>
             ) : (
-              tasks.inProgress.map((task) => (
+              tasks.todo.map((task) => (
                 <div className="task" key={task.id}>
-                  <div className="task-content">{task.content}</div>
+                  <div className="task-content">{task.title || task.content}</div>
                   {task.description && (
                     <div className="task-desc">{task.description}</div>
                   )}
@@ -85,23 +80,17 @@ const TaskBoard = () => {
                     <div className="task-assignee">@{task.assignedTo}</div>
                   )}
                   <div className="task-footer">
-                    <small>Due: {task.due}</small>
+                    <small>Created: {new Date(task.createdAt).toLocaleDateString()}</small>
                     <div>
                       <button
                         className="task-action"
-                        onClick={() => moveTask(task.id, "inProgress", "done")}
+                        onClick={() => moveTask(task.id, "inProgress")}
                       >
-                        → Move to Done
-                      </button>
-                      <button
-                        className="task-action"
-                        onClick={() => moveTask(task.id, "inProgress", "todo")}
-                      >
-                        → Move to To Do
+                        → Move to In Progress
                       </button>
                       <button
                         className="task-delete"
-                        onClick={() => deleteTask(task.id, "inProgress")}
+                        onClick={() => deleteTask(task.id)}
                       >
                         × Delete
                       </button>
@@ -112,17 +101,17 @@ const TaskBoard = () => {
             )}
           </div>
         </div>
-        
-        {/* Todo Column */}
-        <div className="column todo">
-          <h2>To Do</h2>
+
+        {/* In Progress Column */}
+        <div className="column in-progress">
+          <h2>In Progress</h2>
           <div className="tasks">
-            {tasks.todo.length === 0 ? (
+            {tasks.inProgress.length === 0 ? (
               <p>No tasks to display</p>
             ) : (
-              tasks.todo.map((task) => (
+              tasks.inProgress.map((task) => (
                 <div className="task" key={task.id}>
-                  <div className="task-content">{task.content}</div>
+                  <div className="task-content">{task.title || task.content}</div>
                   {task.description && (
                     <div className="task-desc">{task.description}</div>
                   )}
@@ -130,17 +119,23 @@ const TaskBoard = () => {
                     <div className="task-assignee">@{task.assignedTo}</div>
                   )}
                   <div className="task-footer">
-                    <small>Due: {task.due}</small>
+                    <small>Created: {new Date(task.createdAt).toLocaleDateString()}</small>
                     <div>
                       <button
                         className="task-action"
-                        onClick={() => moveTask(task.id, "todo", "inProgress")}
+                        onClick={() => moveTask(task.id, "done")}
                       >
-                        → Move to In Progress
+                        → Move to Done
+                      </button>
+                      <button
+                        className="task-action"
+                        onClick={() => moveTask(task.id, "todo")}
+                      >
+                        → Move to To Do
                       </button>
                       <button
                         className="task-delete"
-                        onClick={() => deleteTask(task.id, "todo")}
+                        onClick={() => deleteTask(task.id)}
                       >
                         × Delete
                       </button>
@@ -161,7 +156,7 @@ const TaskBoard = () => {
             ) : (
               tasks.done.map((task) => (
                 <div className="task" key={task.id}>
-                  <div className="task-content">{task.content}</div>
+                  <div className="task-content">{task.title || task.content}</div>
                   {task.description && (
                     <div className="task-desc">{task.description}</div>
                   )}
@@ -169,17 +164,17 @@ const TaskBoard = () => {
                     <div className="task-assignee">@{task.assignedTo}</div>
                   )}
                   <div className="task-footer">
-                    <small>Due: {task.due}</small>
+                    <small>Created: {new Date(task.createdAt).toLocaleDateString()}</small>
                     <div>
                       <button
                         className="task-action"
-                        onClick={() => moveTask(task.id, "done", "inProgress")}
+                        onClick={() => moveTask(task.id, "inProgress")}
                       >
                         → Move to In Progress
                       </button>
                       <button
                         className="task-delete"
-                        onClick={() => deleteTask(task.id, "done")}
+                        onClick={() => deleteTask(task.id)}
                       >
                         × Delete
                       </button>

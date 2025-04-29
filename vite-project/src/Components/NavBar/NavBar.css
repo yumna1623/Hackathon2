@@ -1,0 +1,93 @@
+.navbar {
+    background-color: #ff9e2f;
+    padding: 1rem;  
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    font-family: sans-serif, cursive;
+    font-style: bold;
+    font-size: large;
+}
+
+
+.navbar-brand {
+    color: #000000;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.navbar-brand:hover {
+    color: #ffffff;
+}
+
+.navbar-nav {
+    display: flex;
+    gap: 1rem;
+    margin-left: auto;  /* This ensures the links move to the right */
+}
+
+.navbar-nav .nav-link {
+    color: #dbeafe;
+    font-weight: 500;
+}
+
+.navbar-nav .nav-link.active {
+    color: #ffffff;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #93c5fd;
+}
+
+.navbar-toggler {
+    border-color: #ffffff;
+}
+
+.nav-link {
+    transition: color 0.3s ease;
+}
+.logout {
+    color: #dbeafe;
+    font-weight: 500;
+    margin-left: auto; 
+    border: 2px ;
+    border-radius: 8px;
+    padding: 8px 16px;
+    background-color: #1c1d1d;
+    width: auto; /* Button size according to text */
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    text-decoration: none; /* Remove underline if using <a> */
+    display: inline-block;
+}
+
+.logout:hover {
+    background-color: #374151;
+    color: #ffffff;
+    border-color: #ffffff;
+}.task-form-container {
+    margin-top: 100px; /* Give space below fixed navbar */
+    padding: 20px;
+}
+.btn-add {
+    background-color: transparent;
+    border: none;
+    color: #0c2b53 !important;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.btn-add:hover {
+    color: #93c5fd;
+}
+
+
+

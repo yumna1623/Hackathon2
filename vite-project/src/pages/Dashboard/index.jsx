@@ -1,13 +1,13 @@
 
 
 
-import { TaskList,TaskForm, TaskBoard } from"../../Components"
+import { TaskList,TaskForm, TaskBoard , NavBar } from"../../Components"
 export default function Dashboard() {
   return (
 
     <div>
+        <NavBar />
     <h1>Task Tracker</h1>
-    {/* <TaskForm /> */}
     <TaskList />
     <TaskBoard />
   </div>
