@@ -1,61 +1,74 @@
-/* TaskForm.css */
 .task-form {
     width: 100%;
     max-width: 500px;
-    margin: 2rem auto;
-    padding: 2rem;
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+
+  }
+   
+  
 
 .task-form h2 {
     text-align: center;
     margin-bottom: 1rem;
-    color: #333;
+    color: #2c2c2c;
+    font-size: 1.8rem;
 }
 
 .task-form input,
 .task-form textarea {
     width: 100%;
-    padding: 0.8rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 10px;
     font-size: 1rem;
-    background-color: #fafafa;
-    transition: border-color 0.3s;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s, background-color 0.3s;
+    color: black;
 }
 
 .task-form input:focus,
 .task-form textarea:focus {
     outline: none;
-    border-color: #7b5cff;
-    background-color: #fff;
+    border-color: #5b3cc4;
 }
 
 .task-form textarea {
     resize: vertical;
-    min-height: 100px;
+    min-height: 120px;
 }
 
 .task-form button {
     color: white;
-    padding: 0.8rem;
+    padding: 0.9rem;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s;
-    background-color: #367dda;
-
+    transition: background-color 0.3s, transform 0.2s;
 }
 
-.task-form button:hover {
-    background-color: #1b1247;
+.save-btn {
+    background-color: #5b3cc4;
+}
+
+.save-btn:hover {
+    background-color: #4a2fb5;
+    transform: scale(1.03);
+}
+
+.cancel-btn {
+    background-color: #5b3cc4;
+    color: #333;
+}
+
+.cancel-btn:hover {
+    background-color: #5b3cc4;
+    transform: scale(1.02);
 }
 
 .success-message {
@@ -68,17 +81,13 @@
     text-align: center;
 }
 
-.save-btn, .cancel-btn {
-    margin-top: 10px;
+.form-actions {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    cursor: pointer;
-    font-size: 16px;
+    flex-direction: column;
+    gap: 0.8rem;
 }
 
-/* --------------- Responsive Design ----------------- */
+/* Responsive */
 @media (max-width: 600px) {
     .task-form {
         padding: 1.5rem;
@@ -89,28 +98,11 @@
     .task-form input,
     .task-form textarea {
         font-size: 0.95rem;
-        padding: 0.7rem;
+        padding: 0.8rem;
     }
 
-    .task-form button,
-    .save-btn,
-    .cancel-btn {
+    .task-form button {
         font-size: 0.95rem;
-        padding: 0.7rem;
-    }
-}
-
-@media (max-width: 400px) {
-    .task-form {
-        padding: 1rem;
-    }
-
-    .task-form h2 {
-        font-size: 1.5rem;
-    }
-
-    .task-form input,
-    .task-form textarea {
-        font-size: 0.9rem;
+        padding: 0.8rem;
     }
 }

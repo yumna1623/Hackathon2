@@ -3,7 +3,7 @@ import { ref, onValue, update, remove } from "firebase/database";
 import { db } from "../../config";
 import "./TaskBoard.css";
 
-const TaskBoard = () => {
+const TaskBoard = ({ searchQuery }) => {
   const [tasks, setTasks] = useState({
     todo: [],
     inProgress: [],
@@ -60,27 +60,47 @@ const TaskBoard = () => {
     );
   };
 
-  return (
+  // Filter tasks based on search query
+  const filterTasks = (taskList) => {
+    return taskList.filter(
+      (task) =>
+        task.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        task.email?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
+
+  // Check if tasks are available in each category after filtering
+  const filteredTodo = filterTasks(tasks.todo);
+  const filteredInProgress = filterTasks(tasks.inProgress);
+  const filteredDone = filterTasks(tasks.done);
+
+  return tasks.todo.length === 0 &&
+    tasks.inProgress.length === 0 &&
+    tasks.done.length === 0 ? (
+    <div className="loading">Click on Add Task Button on your top right</div>
+  ) : (
     <div className="task-board">
       <div className="columns-container">
         {/* Todo Column */}
         <div className="column todo">
           <h2>To Do</h2>
           <div className="tasks">
-            {tasks.todo.length === 0 ? (
-              <p>No tasks to display</p>
+            {filteredTodo.length === 0 ? (
+              <div className="no-tasks">No tasks found</div>
             ) : (
-              tasks.todo.map((task) => (
+              filteredTodo.map((task) => (
                 <div className="task" key={task.id}>
                   <div className="task-content">{task.title || task.content}</div>
                   {task.description && (
                     <div className="task-desc">{task.description}</div>
                   )}
                   {task.assignedTo && (
-                    <div className="task-assignee">@{task.assignedTo}</div>
+                    <div className="task-assignee">Assigned To : @{task.assignedTo}</div>
                   )}
                   <div className="task-footer">
-                    <small>Created: {new Date(task.createdAt).toLocaleDateString()}</small>
+                    <small>
+                      Created: {new Date(task.createdAt).toLocaleDateString()}
+                    </small>
                     <div>
                       <button
                         className="task-action"
@@ -106,10 +126,10 @@ const TaskBoard = () => {
         <div className="column in-progress">
           <h2>In Progress</h2>
           <div className="tasks">
-            {tasks.inProgress.length === 0 ? (
-              <p>No tasks to display</p>
+            {filteredInProgress.length === 0 ? (
+              <div className="no-tasks">No tasks found</div>
             ) : (
-              tasks.inProgress.map((task) => (
+              filteredInProgress.map((task) => (
                 <div className="task" key={task.id}>
                   <div className="task-content">{task.title || task.content}</div>
                   {task.description && (
@@ -119,7 +139,9 @@ const TaskBoard = () => {
                     <div className="task-assignee">@{task.assignedTo}</div>
                   )}
                   <div className="task-footer">
-                    <small>Created: {new Date(task.createdAt).toLocaleDateString()}</small>
+                    <small className="created_progress_col">
+                      Created: {new Date(task.createdAt).toLocaleDateString()}
+                    </small>
                     <div>
                       <button
                         className="task-action"
@@ -151,10 +173,10 @@ const TaskBoard = () => {
         <div className="column done">
           <h2>Done</h2>
           <div className="tasks">
-            {tasks.done.length === 0 ? (
-              <p>No tasks to display</p>
+            {filteredDone.length === 0 ? (
+              <div className="no-tasks">No tasks found</div>
             ) : (
-              tasks.done.map((task) => (
+              filteredDone.map((task) => (
                 <div className="task" key={task.id}>
                   <div className="task-content">{task.title || task.content}</div>
                   {task.description && (
@@ -164,7 +186,9 @@ const TaskBoard = () => {
                     <div className="task-assignee">@{task.assignedTo}</div>
                   )}
                   <div className="task-footer">
-                    <small>Created: {new Date(task.createdAt).toLocaleDateString()}</small>
+                    <small className="created_done_col">
+                      Created: {new Date(task.createdAt).toLocaleDateString()}
+                    </small>
                     <div>
                       <button
                         className="task-action"

@@ -1,15 +1,16 @@
+import React, { useState } from "react";
+import {NavBar, TaskBoard, TaskList} from "../../Components";
 
+const Dashboard = () => {
+  const [searchQuery, setSearchQuery] = useState("");
 
-
-import { TaskList,TaskForm, TaskBoard , NavBar } from"../../Components"
-export default function Dashboard() {
   return (
+    <>
+      <NavBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <TaskList searchQuery={searchQuery} />
+      <TaskBoard searchQuery={searchQuery} />
+    </>
+  );
+};
 
-    <div>
-        <NavBar />
-    <h1>Task Tracker</h1>
-    <TaskList />
-    <TaskBoard />
-  </div>
-  )
-}
+export default Dashboard;

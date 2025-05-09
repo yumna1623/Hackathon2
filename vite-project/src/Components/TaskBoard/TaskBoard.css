@@ -4,6 +4,14 @@
     margin: 0 auto;
     padding: 20px;
     margin-top: 100px;
+    justify-content: center;
+  }
+  .created_progress_col{
+    color: white!important;
+}
+.created_done_col{
+    
+    color: white!important;
   }
   
   .task-board h1 {
@@ -102,11 +110,13 @@
     transform: scale(1.02);
     box-shadow: 0 0 10px rgba(126, 49, 16, 0.5);
   }
-  
   .task-content {
-    margin-bottom: 1rem;
-    word-break: break-word;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 8px;
+    font-size: 1.1rem; /* Optional: Slightly bigger */
   }
+
   
   .task-footer {
     display: flex;
@@ -138,8 +148,7 @@
   
   /* Column specific colors */
   .in-progress .task {
-      background-color: #367dda;
-    background-color: #0a2c58;
+    background-color: #1d4e8f;
 }
 
 .todo .task {
@@ -147,7 +156,8 @@
 }
 
 .done .task {
-    background-color: #117a16;
+    background-color: #082b4e;
+    /* background-color: #36c73e; */
     
   }
   

@@ -1,5 +1,47 @@
-/* Delete Button */
-.delete-btn {
+/* Task Card Styling */
+.task-card {
+    min-height: 200px;
+    padding: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #fff;
+  }
+  
+  /* Footer Section */
+  .task-footer {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+  
+  /* Task Controls */
+  .task-controls {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+  
+  .task-controls button {
+    flex-shrink: 0;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  /* Status Actions */
+  .status-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  
+  /* Buttons Styling */
+  
+  /* Delete Button */
+  .delete-btn {
     background: #f44336;
     color: white;
   }
@@ -10,12 +52,13 @@
     color: white;
   }
   
-  /* Status Buttons */
+  /* Progress Button */
   .progress-btn {
     background: #2196f3;
     color: white;
   }
   
+  /* Complete Button */
   .complete-btn {
     background: #4caf50;
     color: white;
@@ -25,16 +68,11 @@
   .edit-btn {
     background: #ffc107;
     color: black;
+    display: inline-block;
   }
   
-  /* Button Spacing */
-  .task-controls {
-    display: flex;
-    gap: 8px;
+  /* Optional: Add hover effect */
+  .task-controls button:hover {
+    opacity: 0.8;
   }
   
-  .status-actions {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
