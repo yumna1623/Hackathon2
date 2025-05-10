@@ -13,6 +13,14 @@
     
     color: white!important;
   }
+  .task {
+    transition: transform 0.2s ease;
+  }
+  
+  .task[draggable="true"] {
+    cursor: grab;
+  }
+  
   
   .task-board h1 {
     text-align: center;

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ref, onValue, update, remove } from "firebase/database";
 import { db } from "../../config";
 import "./TaskBoard.css";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const TaskBoard = ({ searchQuery }) => {
   const [tasks, setTasks] = useState({
@@ -10,7 +11,6 @@ const TaskBoard = ({ searchQuery }) => {
     done: [],
   });
 
-  // Load tasks from Firebase and categorize them
   useEffect(() => {
     const tasksRef = ref(db, "tasks");
 
@@ -38,7 +38,6 @@ const TaskBoard = ({ searchQuery }) => {
     return () => unsubscribe();
   }, []);
 
-  // Move task to another column (updates status in Firebase)
   const moveTask = (taskId, toColumn) => {
     const taskRef = ref(db, `tasks/${taskId}`);
     const statusMap = {
@@ -52,7 +51,6 @@ const TaskBoard = ({ searchQuery }) => {
     );
   };
 
-  // Delete task from Firebase
   const deleteTask = (taskId) => {
     const taskRef = ref(db, `tasks/${taskId}`);
     remove(taskRef).catch((error) =>
@@ -60,7 +58,6 @@ const TaskBoard = ({ searchQuery }) => {
     );
   };
 
-  // Filter tasks based on search query
   const filterTasks = (taskList) => {
     return taskList.filter(
       (task) =>
@@ -69,7 +66,21 @@ const TaskBoard = ({ searchQuery }) => {
     );
   };
 
-  // Check if tasks are available in each category after filtering
+  const handleDragEnd = (result) => {
+    const { source, destination, draggableId } = result;
+
+    if (!destination) return;
+
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    ) {
+      return;
+    }
+
+    moveTask(draggableId, destination.droppableId);
+  };
+
   const filteredTodo = filterTasks(tasks.todo);
   const filteredInProgress = filterTasks(tasks.inProgress);
   const filteredDone = filterTasks(tasks.done);
@@ -80,136 +91,107 @@ const TaskBoard = ({ searchQuery }) => {
     <div className="loading">Click on Add Task Button on your top right</div>
   ) : (
     <div className="task-board">
-      <div className="columns-container">
-        {/* Todo Column */}
-        <div className="column todo">
-          <h2>To Do</h2>
-          <div className="tasks">
-            {filteredTodo.length === 0 ? (
-              <div className="no-tasks">No tasks found</div>
-            ) : (
-              filteredTodo.map((task) => (
-                <div className="task" key={task.id}>
-                  <div className="task-content">{task.title || task.content}</div>
-                  {task.description && (
-                    <div className="task-desc">{task.description}</div>
-                  )}
-                  {task.assignedTo && (
-                    <div className="task-assignee">Assigned To : @{task.assignedTo}</div>
-                  )}
-                  <div className="task-footer">
-                    <small>
-                      Created: {new Date(task.createdAt).toLocaleDateString()}
-                    </small>
-                    <div>
-                      <button
-                        className="task-action"
-                        onClick={() => moveTask(task.id, "inProgress")}
-                      >
-                        → Move to In Progress
-                      </button>
-                      <button
-                        className="task-delete"
-                        onClick={() => deleteTask(task.id)}
-                      >
-                        × Delete
-                      </button>
-                    </div>
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <div className="columns-container">
+          {/* Columns */}
+          {[
+            { id: "todo", title: "To Do", tasks: filteredTodo },
+            { id: "inProgress", title: "In Progress", tasks: filteredInProgress },
+            { id: "done", title: "Done", tasks: filteredDone },
+          ].map((column) => (
+            <Droppable key={column.id} droppableId={column.id}>
+              {(provided) => (
+                <div
+                  className={`column ${column.id}`}
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                >
+                  <h2>{column.title}</h2>
+                  <div className="tasks">
+                    {column.tasks.length === 0 ? (
+                      <div className="no-tasks">No tasks found</div>
+                    ) : (
+                      column.tasks.map((task, index) => (
+                        <Draggable key={task.id} draggableId={task.id} index={index}>
+                          {(provided) => (
+                            <div
+                              className="task"
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            >
+                              <div className="task-content">{task.title || task.content}</div>
+                              {task.description && (
+                                <div className="task-desc">{task.description}</div>
+                              )}
+                              {task.assignedTo && (
+                                <div className="task-assignee">
+                                  Assigned To : @{task.assignedTo}
+                                </div>
+                              )}
+                              <div className="task-footer">
+                                <small>
+                                  Created:{" "}
+                                  {new Date(task.createdAt).toLocaleDateString()}
+                                </small>
+                                <div>
+                                  {column.id !== "done" && (
+                                    <button
+                                      className="task-action"
+                                      onClick={() =>
+                                        moveTask(
+                                          task.id,
+                                          column.id === "todo"
+                                            ? "inProgress"
+                                            : "done"
+                                        )
+                                      }
+                                    >
+                                      → Move to{" "}
+                                      {column.id === "todo"
+                                        ? "In Progress"
+                                        : "Done"}
+                                    </button>
+                                  )}
+                                  {column.id !== "todo" && (
+                                    <button
+                                      className="task-action"
+                                      onClick={() =>
+                                        moveTask(
+                                          task.id,
+                                          column.id === "done"
+                                            ? "inProgress"
+                                            : "todo"
+                                        )
+                                      }
+                                    >
+                                      → Move to{" "}
+                                      {column.id === "done"
+                                        ? "In Progress"
+                                        : "To Do"}
+                                    </button>
+                                  )}
+                                  <button
+                                    className="task-delete"
+                                    onClick={() => deleteTask(task.id)}
+                                  >
+                                    × Delete
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </Draggable>
+                      ))
+                    )}
+                    {provided.placeholder}
                   </div>
                 </div>
-              ))
-            )}
-          </div>
+              )}
+            </Droppable>
+          ))}
         </div>
-
-        {/* In Progress Column */}
-        <div className="column in-progress">
-          <h2>In Progress</h2>
-          <div className="tasks">
-            {filteredInProgress.length === 0 ? (
-              <div className="no-tasks">No tasks found</div>
-            ) : (
-              filteredInProgress.map((task) => (
-                <div className="task" key={task.id}>
-                  <div className="task-content">{task.title || task.content}</div>
-                  {task.description && (
-                    <div className="task-desc">{task.description}</div>
-                  )}
-                  {task.assignedTo && (
-                    <div className="task-assignee">@{task.assignedTo}</div>
-                  )}
-                  <div className="task-footer">
-                    <small className="created_progress_col">
-                      Created: {new Date(task.createdAt).toLocaleDateString()}
-                    </small>
-                    <div>
-                      <button
-                        className="task-action"
-                        onClick={() => moveTask(task.id, "done")}
-                      >
-                        → Move to Done
-                      </button>
-                      <button
-                        className="task-action"
-                        onClick={() => moveTask(task.id, "todo")}
-                      >
-                        → Move to To Do
-                      </button>
-                      <button
-                        className="task-delete"
-                        onClick={() => deleteTask(task.id)}
-                      >
-                        × Delete
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-
-        {/* Done Column */}
-        <div className="column done">
-          <h2>Done</h2>
-          <div className="tasks">
-            {filteredDone.length === 0 ? (
-              <div className="no-tasks">No tasks found</div>
-            ) : (
-              filteredDone.map((task) => (
-                <div className="task" key={task.id}>
-                  <div className="task-content">{task.title || task.content}</div>
-                  {task.description && (
-                    <div className="task-desc">{task.description}</div>
-                  )}
-                  {task.assignedTo && (
-                    <div className="task-assignee">@{task.assignedTo}</div>
-                  )}
-                  <div className="task-footer">
-                    <small className="created_done_col">
-                      Created: {new Date(task.createdAt).toLocaleDateString()}
-                    </small>
-                    <div>
-                      <button
-                        className="task-action"
-                        onClick={() => moveTask(task.id, "inProgress")}
-                      >
-                        → Move to In Progress
-                      </button>
-                      <button
-                        className="task-delete"
-                        onClick={() => deleteTask(task.id)}
-                      >
-                        × Delete
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-      </div>
+      </DragDropContext>
     </div>
   );
 };
